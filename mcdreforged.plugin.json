@@ -1,0 +1,21 @@
+{
+  "id": "auto_ann",
+  "version": "1.0.0",
+  "name": "AutoAnnouncement",
+  "description": {
+    "en_us": "A simple/easy-to-use auto announcement plugin.",
+    "zh_cn": "一个简单易用的自动公告插件"
+  },
+  "author": [
+    "OptiJava"
+  ],
+  "link": "https://github.com/OptiJava/AutoAnnouncement",
+  "dependencies": {
+    "mcdreforged": ">=2.2.0"
+  },
+  "archive_name": "auto_ann-v{version}",
+  "resources": [
+    "lang",
+    "LICENSE"
+  ]
+}
