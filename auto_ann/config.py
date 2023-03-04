@@ -4,11 +4,6 @@ from mcdreforged.utils.serializer import Serializable
 
 
 class Announcement(Serializable):
-    
-    def __init__(self, content: str, **kwargs):
-        super().__init__(**kwargs)
-        self.content = content
-    
     # 公告内容
     content: str = ''
     

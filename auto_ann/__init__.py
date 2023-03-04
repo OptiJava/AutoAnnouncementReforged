@@ -12,7 +12,7 @@ class AnnouncerThread(threading.Thread):
     server_inst: PluginServerInterface
     
     def __init__(self, server: PluginServerInterface):
-        super().__init__(name='[auto_ann] daemon', daemon=True)
+        super().__init__(name='[auto_ann] - daemon', daemon=True)
         self.server_inst = server
         self.stop_event = threading.Event()
     
@@ -24,7 +24,7 @@ class AnnouncerThread(threading.Thread):
         num = 0
         
         while True:
-            if config.is_auto_announcer_active:
+            if config.is_auto_announcer_active and self.server_inst.is_server_running():
                 key_list = list(config.announcement_list.keys())
                 
                 try:
@@ -58,7 +58,7 @@ daemon_thread: AnnouncerThread
 def create_announcement(server: PluginServerInterface, name: str, src: CommandSource, value: str = ''):
     global config
     if name not in config.announcement_list:
-        config.announcement_list[name] = Announcement(value)
+        config.announcement_list[name] = Announcement(content=value)
         src.reply(RTextMCDRTranslation('auto_ann.create.success', name, color=RColor.green))
         server.logger.info(f'Add announcement {name} successfully.')
     else:
@@ -149,8 +149,8 @@ def reload_config(server: PluginServerInterface, src: CommandSource):
     src.reply(RTextMCDRTranslation('auto_ann.config.reload', color=RColor.green))
 
 
-def on_load(server: PluginServerInterface, old):
-    global config, daemon_thread
+def on_load(server: PluginServerInterface, old_module):
+    global config
     
     config = server.load_config_simple(target_class=Configuration)
     
@@ -282,11 +282,14 @@ def on_load(server: PluginServerInterface, old):
             .runs(lambda src: reload_config(server, src))
         )
     )
-    
+
+
+def on_server_startup(server: PluginServerInterface):
+    global daemon_thread
     daemon_thread = AnnouncerThread(server)
     daemon_thread.start()
 
 
-def on_unload(server):
+def on_unload(server: PluginServerInterface):
     global daemon_thread
     daemon_thread.break_thread()
