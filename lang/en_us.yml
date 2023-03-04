@@ -1,0 +1,26 @@
+auto_ann:
+  create:
+    already_in_list: '{0} is already in the list!'
+    success: 'Add announcement {0} successfully.'
+
+  delete:
+    not_exist: '{0} is not in the list!'
+    success: 'Delete announcement {0} successfully.'
+
+  auto_announcer:
+    start: 'Auto announcement started.'
+    stop: 'Auto announcement stopped.'
+    already_started: 'Auto announcement has already started.'
+    already_stopped: 'Auto announcement has already stopped.'
+
+    enable: 'Announcement {0} enabled successfully.'
+    disable: 'Announcement {0} disabled successfully.'
+    enable_or_disable_failed: 'Announcement {0} is not in the list!'
+
+  config:
+    save: 'Config saved!'
+    reload: 'Config reloaded!'
+    set_interval: 'Set auto announcement interval to {0}'
+
+  command:
+    on_error: 'An error occurred: {0}'

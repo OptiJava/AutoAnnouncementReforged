@@ -7,110 +7,150 @@ from auto_ann.config import Configuration, Announcement
 
 config: Configuration
 
-isAnnounceActive = False
 
-
-def auto_announcement_thread(server: PluginServerInterface):
-    num = 0
+class AnnouncerThread(threading.Thread):
+    server_inst: PluginServerInterface
     
-    while True:
-        if isAnnounceActive:
-            show_announcement(list(config.announcement_list.keys())[num])
-            num += 1
+    def __init__(self, server: PluginServerInterface):
+        super().__init__(name='[auto_ann] daemon', daemon=True)
+        self.server_inst = server
+        self.stop_event = threading.Event()
+    
+    def break_thread(self):
+        self.stop_event.set()
+    
+    def run(self):
+        global config
+        num = 0
         
-        for _ in range(config.interval):
-            sleep(1)
-            if threading.current_thread().isRunning is False:
-                server.logger.warning(f'auto_ann thread: "{threading.current_thread()}" stopped because auto_ann '
-                                      f'plugin was unloaded.')
-                break
+        while True:
+            if config.is_auto_announcer_active:
+                key_list = list(config.announcement_list.keys())
+                
+                try:
+                    while not config.announcement_list.get(key_list[num]).enabled:
+                        if len(key_list) - 1 > num:
+                            num += 1
+                        elif len(key_list) - 1 == num:
+                            num = 0
+                    
+                    if len(key_list) - 1 > num:
+                        show_announcement(self.server_inst, key_list[num])
+                        num += 1
+                    elif len(key_list) - 1 == num:
+                        show_announcement(self.server_inst, key_list[num])
+                        num = 0
+                except IndexError:
+                    continue
+            
+            for _ in range(config.interval):
+                sleep(1.0)
+                if self.stop_event.is_set() is True:
+                    self.server_inst.logger.warning(f'auto_ann thread: {threading.current_thread().name} stopped '
+                                                    f'because auto_ann plugin was unloaded.')
+                    break
 
 
-auto_ann_thread: threading.Thread
+daemon_thread: AnnouncerThread
 
 
-@new_thread('[auto_ann] create')
-def create_announcement(server: PluginServerInterface, name: str, value: str, src: CommandSource):
+@new_thread('[auto_ann] - create')
+def create_announcement(server: PluginServerInterface, name: str, src: CommandSource, value: str = ''):
+    global config
     if name not in config.announcement_list:
         config.announcement_list[name] = Announcement(value)
-        src.reply(RText(f'Add announcement "{name}" successfully.', color=RColor.green))
-        server.logger.info(f'[auto_ann] Add announcement "{name}" successfully.')
+        src.reply(RTextMCDRTranslation('auto_ann.create.success', name, color=RColor.green))
+        server.logger.info(f'Add announcement {name} successfully.')
     else:
-        src.reply(RText(f'"{name}" is already in the list!', color=RColor.red))
+        src.reply(
+            RTextMCDRTranslation('auto_ann.create.already_in_list', name, color=RColor.red))
 
 
-@new_thread('[auto_ann] delete')
+@new_thread('[auto_ann] - delete')
 def del_announcement(server: PluginServerInterface, name: str, src: CommandSource):
+    global config
     if name in config.announcement_list:
         config.announcement_list.pop(name)
-        src.reply(RText(f'Delete announcement "{name}" successfully.', color=RColor.green))
-        server.logger.info(f'[auto_ann] Delete announcement "{name}" successfully.')
+        src.reply(RTextMCDRTranslation('auto_ann.delete.success', name, color=RColor.green))
+        server.logger.info(f'Delete announcement {name} successfully.')
     else:
-        src.reply(RText(f'"{name}" is not in the list!', color=RColor.red))
+        src.reply(RTextMCDRTranslation('auto_ann.delete.not_exist', name, color=RColor.red))
 
 
-@new_thread('[auto_ann] show')
+@new_thread('[auto_ann] - show')
 def show_announcement(server: PluginServerInterface, name: str):
+    global config
     if name in config.announcement_list:
-        if not config.announcement_list.get(name).enabled:
-            return
-        
         server.tell('@a', config.announcement_list.get(name).content)
-        server.logger.info(f'[auto_ann] Successfully showed announcement {name}.')
+        server.logger.info(f'Successfully showed announcement {name}.')
 
 
-def set_interval(server: PluginServerInterface, interval: int):
+def set_interval(server: PluginServerInterface, interval: int, src: CommandSource):
+    global config
     config.interval = interval
-    server.logger.info(f'[auto_ann] Set auto announcement interval to {interval}')
+    server.logger.info(f'Set auto announcement interval to {interval}')
+    src.reply(RTextMCDRTranslation('auto_ann.config.set_interval', interval, color=RColor.green))
 
 
 def start_auto_announcement(server: PluginServerInterface, src: CommandSource):
-    global isAnnounceActive
-    if isAnnounceActive:
-        src.reply(RText('Auto announcement has already started.', color=RColor.red))
+    global config
+    if config.is_auto_announcer_active:
+        src.reply(RTextMCDRTranslation('auto_ann.auto_announcer.already_started', color=RColor.red))
         return
     
-    isAnnounceActive = True
+    config.is_auto_announcer_active = True
     server.logger.info('Auto announcement started.')
-    src.reply(RText('Auto announcement started.', color=RColor.green))
+    src.reply(RTextMCDRTranslation('auto_ann.auto_announcer.start', color=RColor.green))
 
 
 def stop_auto_announcement(server: PluginServerInterface, src: CommandSource):
-    global isAnnounceActive
-    if isAnnounceActive:
-        src.reply(RText('Auto announcement has already stopped.', color=RColor.red))
+    global config
+    if not config.is_auto_announcer_active:
+        src.reply(RTextMCDRTranslation('auto_ann.auto_announcer.already_stopped', color=RColor.red))
         return
     
-    isAnnounceActive = False
+    config.is_auto_announcer_active = False
     server.logger.info('Auto announcement stopped.')
-    src.reply(RText('Auto announcement stopped.', color=RColor.green))
+    src.reply(RTextMCDRTranslation('auto_ann.auto_announcer.stop', color=RColor.green))
 
 
 def enable_announcement(server: PluginServerInterface, name: str, src: CommandSource):
-    config.announcement_list.get(name).enabled = True
-    src.reply(f'Announcement {config.announcement_list.get(name)} enabled successfully.')
-    server.logger.info(f'Announcement {config.announcement_list.get(name)} enabled successfully.')
+    global config
+    if name in config.announcement_list:
+        config.announcement_list.get(name).enabled = True
+        src.reply(
+            RTextMCDRTranslation('auto_ann.auto_announcer.enable', name,
+                                 color=RColor.green))
+        server.logger.info(f'Announcement {name} enabled successfully.')
+    else:
+        src.reply(RTextMCDRTranslation('auto_ann.auto_announcer.enable_or_disable_failed', name, color=RColor.red))
 
 
 def disable_announcement(server: PluginServerInterface, name: str, src: CommandSource):
-    config.announcement_list.get(name).enabled = False
-    src.reply(f'Announcement {config.announcement_list.get(name)} disabled successfully.')
-    server.logger.info(f'Announcement {config.announcement_list.get(name)} disabled successfully.')
+    global config
+    if name in config.announcement_list:
+        config.announcement_list.get(name).enabled = False
+        src.reply(
+            RTextMCDRTranslation('auto_ann.auto_announcer.disable', name,
+                                 color=RColor.green))
+        server.logger.info(f'Announcement {name} disabled successfully.')
+    else:
+        src.reply(RTextMCDRTranslation('auto_ann.auto_announcer.enable_or_disable_failed', name, color=RColor.red))
 
 
-@new_thread('[auto_ann] save')
 def save_config(server: PluginServerInterface, src: CommandSource):
     server.save_config_simple(config)
-    src.reply('Config saved!')
+    src.reply(RTextMCDRTranslation('auto_ann.config.save', color=RColor.green))
 
 
 def reload_config(server: PluginServerInterface, src: CommandSource):
-    server.load_config_simple(target_class=Configuration)
-    src.reply('Config reloaded!')
-
-
-def on_load(server: PluginServerInterface, old_module):
     global config
+    config = server.load_config_simple(target_class=Configuration)
+    src.reply(RTextMCDRTranslation('auto_ann.config.reload', color=RColor.green))
+
+
+def on_load(server: PluginServerInterface, old):
+    global config, daemon_thread
     
     config = server.load_config_simple(target_class=Configuration)
     
@@ -118,80 +158,135 @@ def on_load(server: PluginServerInterface, old_module):
         Literal('!!auto_ann')
         .then(
             Literal('create')
-            .requires(lambda src: src.has_permission(config.permission['create']))
             .then(
-                GreedyText('name')
+                Text('name')
+                .requires(lambda src: src.has_permission(config.permission['create']))
+                .on_error(CommandError,
+                          lambda src, err: src.reply(
+                              RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                          handled=True)
+                .runs(lambda src, ctx: create_announcement(server, ctx['name'], src))
                 .then(
-                    GreedyText('content')
-                    .runs(lambda src, ctx: create_announcement(server, ctx['name'], ctx['content'], src))
+                    Literal('content')
+                    .then(
+                        GreedyText('content')
+                        .requires(lambda src: src.has_permission(config.permission['create']))
+                        .on_error(CommandError,
+                                  lambda src, err: src.reply(
+                                      RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                                  handled=True)
+                        .runs(lambda src, ctx: create_announcement(server, ctx['name'], src, value=ctx['content']))
+                    )
                 )
             )
         )
         .then(
             Literal('del')
-            .requires(lambda src: src.has_permission(config.permission['del']))
             .then(
-                GreedyText('name')
+                Text('name')
+                .requires(lambda src: src.has_permission(config.permission['del']))
+                .on_error(CommandError,
+                          lambda src, err: src.reply(
+                              RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                          handled=True)
                 .runs(lambda src, ctx: del_announcement(server, ctx['name'], src))
             )
         )
         
         .then(
             Literal('show')
-            .requires(lambda src: src.has_permission(config.permission['show']))
             .then(
-                GreedyText('name')
+                Text('name')
+                .requires(lambda src: src.has_permission(config.permission['show']))
+                .on_error(CommandError,
+                          lambda src, err: src.reply(
+                              RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                          handled=True)
                 .runs(lambda src, ctx: show_announcement(server, ctx['name']))
             )
         )
         
         .then(
             Literal('set_interval')
-            .requires(lambda src: src.has_permission(config.permission['set_interval']))
             .then(
                 Integer('interval')
-                .runs(lambda src, ctx: set_interval(server, ctx['interval']))
+                .requires(lambda src: src.has_permission(config.permission['set_interval']))
+                .on_error(CommandError,
+                          lambda src, err: src.reply(
+                              RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                          handled=True)
+                .runs(lambda src, ctx: set_interval(server, ctx['interval'], src))
             )
         )
         
         .then(
             Literal('start')
-            .requires(lambda src: src.has_permissions(config.permission['start']))
+            .requires(lambda src: src.has_permission(config.permission['start']))
+            .on_error(CommandError,
+                      lambda src, err: src.reply(
+                          RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                      handled=True)
             .runs(lambda src: start_auto_announcement(server, src))
         )
         .then(
             Literal('stop')
-            .requires(lambda src: src.has_permissions(config.permission['stop']))
+            .requires(lambda src: src.has_permission(config.permission['stop']))
+            .on_error(CommandError,
+                      lambda src, err: src.reply(
+                          RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                      handled=True)
             .runs(lambda src: stop_auto_announcement(server, src))
         )
         
         .then(
             Literal('enable')
             .then(
-                GreedyText('name')
-                .requires(lambda src: src.has_permissions(config.permission['enable']))
+                Text('name')
+                .requires(lambda src: src.has_permission(config.permission['enable']))
+                .on_error(CommandError,
+                          lambda src, err: src.reply(
+                              RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                          handled=True)
                 .runs(lambda src, ctx: enable_announcement(server, ctx['name'], src))
             )
         )
         .then(
             Literal('disable')
             .then(
-                GreedyText('name')
-                .requires(lambda src: src.has_permissions(config.permission['disable']))
+                Text('name')
+                .requires(lambda src: src.has_permission(config.permission['disable']))
+                .on_error(CommandError,
+                          lambda src, err: src.reply(
+                              RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                          handled=True)
                 .runs(lambda src, ctx: disable_announcement(server, ctx['name'], src))
             )
         )
         
-        .then(Literal('save'))
-        .then(Literal('reload'))
+        .then(
+            Literal('save')
+            .requires(lambda src: src.has_permission(config.permission['save']))
+            .on_error(CommandError,
+                      lambda src, err: src.reply(
+                          RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                      handled=True)
+            .runs(lambda src: save_config(server, src))
+        )
+        .then(
+            Literal('reload')
+            .requires(lambda src: src.has_permission(config.permission['reload']))
+            .on_error(CommandError,
+                      lambda src, err: src.reply(
+                          RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                      handled=True)
+            .runs(lambda src: reload_config(server, src))
+        )
     )
     
-    global auto_ann_thread
-    auto_ann_thread = threading.Thread(target=auto_announcement_thread(server), name='[auto_ann] daemon', daemon=True)
-    auto_ann_thread.isRunning = True
-    auto_ann_thread.start()
+    daemon_thread = AnnouncerThread(server)
+    daemon_thread.start()
 
 
-def on_unload(server: PluginServerInterface):
-    global auto_ann_thread
-    auto_ann_thread.isRunning = False
+def on_unload(server):
+    global daemon_thread
+    daemon_thread.break_thread()

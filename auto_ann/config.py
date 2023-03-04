@@ -18,6 +18,9 @@ class Announcement(Serializable):
 
 
 class Configuration(Serializable):
+    # 是否启用自动公告
+    is_auto_announcer_active: bool = False
+    
     # 公告内容列表（轮播）
     announcement_list: Dict[str, Announcement] = {}
     

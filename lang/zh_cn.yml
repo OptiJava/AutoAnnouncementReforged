@@ -1,0 +1,26 @@
+auto_ann:
+  create:
+    already_in_list: '{0} 已经被创建了!'
+    success: '公告 {0} 添加成功'
+
+  delete:
+    not_exist: '{0} 未找到!'
+    success: '公告 {0} 删除成功'
+
+  auto_announcer:
+    start: '自动公告启用'
+    stop: '自动公告停止'
+    already_started: '自动公告已经开启了！'
+    already_stopped: '自动公告未被启动！'
+
+    enable: '公告 {0} 成功启用'
+    disable: '公告 {0} 成功禁用'
+    enable_or_disable_failed: '公告 {0} 未找到！'
+
+  config:
+    save: '配置文件已保存'
+    reload: '配置文件已重载'
+    set_interval: '成功设置自动公告间隔为： {0}'
+
+  command:
+    on_error: '发生错误：{0}'

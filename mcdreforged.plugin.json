@@ -11,7 +11,7 @@
   ],
   "link": "https://github.com/OptiJava/AutoAnnouncement",
   "dependencies": {
-    "mcdreforged": ">=2.2.0"
+    "mcdreforged": ">=2.7.0"
   },
   "archive_name": "auto_ann-v{version}",
   "resources": [
