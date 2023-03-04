@@ -10,7 +10,7 @@
 
 - Print help message.
 
-`!!auto_ann create <name> <content>`:
+`!!auto_ann create <name> content <content>`:
 
 - Create a new announcement. The announcements will be saved in the config file.
 - `<name>` is an identifier of your announcement.
@@ -50,7 +50,7 @@
 `!!auto_ann save`
 
 - Manually save all configurations to config file.
-- In most cases, you don't need this command.
+- The plugin will auto save config when server stopped
 
 `!!auto_ann reload`
 

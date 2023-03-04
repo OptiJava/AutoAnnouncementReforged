@@ -23,6 +23,7 @@ class Configuration(Serializable):
     # 例如：有公告A、B、C，间隔为120s，则效果为：播放A，等待120s，播放B，等待120s，播放C，等待120s，再播放A，等待120s......
     interval: int = 120  # 单位为秒
     
+    # 指令最低权限要求
     permission: Dict[str, int] = {
         # 创建新的公告
         'create': 3,
@@ -52,5 +53,8 @@ class Configuration(Serializable):
         'save': 3,
         
         # 重载配置文件
-        'reload': 3
+        'reload': 3,
+        
+        # 显示公告列表
+        'list': 1
     }

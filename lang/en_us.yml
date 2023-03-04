@@ -24,3 +24,9 @@ auto_ann:
 
   command:
     on_error: 'An error occurred: {0}'
+
+  list:
+    header: 'Announcements List'
+    announcement: '{0} | {1}'
+    click_to_show: 'Click here to show this announcement to all members (the default requirement is permission level 3)'
+    click_to_del: 'Click here to delete this announcement (the default requirement is permission level 3)'

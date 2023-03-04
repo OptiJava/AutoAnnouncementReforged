@@ -12,7 +12,7 @@ class AnnouncerThread(threading.Thread):
     server_inst: PluginServerInterface
     
     def __init__(self, server: PluginServerInterface):
-        super().__init__(name='[auto_ann] - daemon', daemon=True)
+        super().__init__(name='auto_ann - daemon', daemon=True)
         self.server_inst = server
         self.stop_event = threading.Event()
     
@@ -54,7 +54,7 @@ class AnnouncerThread(threading.Thread):
 daemon_thread: AnnouncerThread
 
 
-@new_thread('[auto_ann] - create')
+@new_thread('auto_ann - create')
 def create_announcement(server: PluginServerInterface, name: str, src: CommandSource, value: str = ''):
     global config
     if name not in config.announcement_list:
@@ -66,7 +66,7 @@ def create_announcement(server: PluginServerInterface, name: str, src: CommandSo
             RTextMCDRTranslation('auto_ann.create.already_in_list', name, color=RColor.red))
 
 
-@new_thread('[auto_ann] - delete')
+@new_thread('auto_ann - delete')
 def del_announcement(server: PluginServerInterface, name: str, src: CommandSource):
     global config
     if name in config.announcement_list:
@@ -77,7 +77,7 @@ def del_announcement(server: PluginServerInterface, name: str, src: CommandSourc
         src.reply(RTextMCDRTranslation('auto_ann.delete.not_exist', name, color=RColor.red))
 
 
-@new_thread('[auto_ann] - show')
+@new_thread('auto_ann - show')
 def show_announcement(server: PluginServerInterface, name: str):
     global config
     if name in config.announcement_list:
@@ -138,15 +138,35 @@ def disable_announcement(server: PluginServerInterface, name: str, src: CommandS
         src.reply(RTextMCDRTranslation('auto_ann.auto_announcer.enable_or_disable_failed', name, color=RColor.red))
 
 
+@new_thread('auto_ann - save')
 def save_config(server: PluginServerInterface, src: CommandSource):
     server.save_config_simple(config)
     src.reply(RTextMCDRTranslation('auto_ann.config.save', color=RColor.green))
 
 
+@new_thread('auto_ann - reload')
 def reload_config(server: PluginServerInterface, src: CommandSource):
     global config
     config = server.load_config_simple(target_class=Configuration)
     src.reply(RTextMCDRTranslation('auto_ann.config.reload', color=RColor.green))
+
+
+@new_thread('auto_ann - list')
+def list_announcements(server: PluginServerInterface, src: CommandSource):
+    global config
+    key_list = list(config.announcement_list.keys())
+    
+    src.reply(RTextMCDRTranslation('auto_ann.list.header', color=RColor.blue))
+    for name in key_list:
+        src.reply(RTextList(
+            RText('[▷]', color=RColor.green)
+            .c(RAction.suggest_command, f'!!auto_ann show {name}')
+            .h(server.tr('auto_ann.list.click_to_show')),
+            RText('[x]', color=RColor.red)
+            .c(RAction.suggest_command, f'!!auto_ann del {name}')
+            .h(server.tr('auto_ann.list.click_to_del')),
+            RTextMCDRTranslation('auto_ann.list.announcement', name, config.announcement_list.get(name).content)
+        ))
 
 
 def on_load(server: PluginServerInterface, old_module):
@@ -175,7 +195,8 @@ def on_load(server: PluginServerInterface, old_module):
                                   lambda src, err: src.reply(
                                       RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
                                   handled=True)
-                        .runs(lambda src, ctx: create_announcement(server, ctx['name'], src, value=ctx['content']))
+                        .runs(lambda src, ctx: create_announcement(server, ctx['name'], src,
+                                                                   value=ctx['content']))
                     )
                 )
             )
@@ -281,6 +302,15 @@ def on_load(server: PluginServerInterface, old_module):
                       handled=True)
             .runs(lambda src: reload_config(server, src))
         )
+        .then(
+            Literal('list')
+            .requires(lambda src: src.has_permission(config.permission['list']))
+            .on_error(CommandError,
+                      lambda src, err: src.reply(
+                          RTextMCDRTranslation('auto_ann.command.on_error', err, color=RColor.red)),
+                      handled=True)
+            .runs(lambda src: list_announcements(server, src))
+        )
     )
 
 
@@ -288,6 +318,10 @@ def on_server_startup(server: PluginServerInterface):
     global daemon_thread
     daemon_thread = AnnouncerThread(server)
     daemon_thread.start()
+
+
+def on_server_stop(server: PluginServerInterface, return_code: int):
+    save_config(server, server.get_plugin_command_source())
 
 
 def on_unload(server: PluginServerInterface):

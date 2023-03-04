@@ -24,3 +24,9 @@ auto_ann:
 
   command:
     on_error: '发生错误：{0}'
+
+  list:
+    header: '公告列表'
+    announcement: '{0} | {1}'
+    click_to_show: '点击此处向所有成员展示此公告（默认要求权限等级3）'
+    click_to_del: '点击此处删除此公告（默认要求权限等级3）'
