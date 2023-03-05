@@ -1,4 +1,20 @@
 auto_ann:
+  help_msg: |
+    AutoAnnouncement v{0}
+    §f`!!auto_ann` §a显示帮助信息
+    §f`!!auto_ann create <name>` §a创建一个内容为空名为<name>的公告
+    §f`!!auto_ann create <name> content <content>` §a创建一个内容为<content>名为<name>的公告
+    §f`!!auto_ann del <name>` §a删除名为<name>的公告
+    §f`!!auto_ann enable <name>` §a启用一个公告
+    §f`!!auto_ann disable <name>` §a禁用一个公告
+    §f`!!auto_ann show <name>` §a向所有成员展示一个公告，不论这个公告是否被启用
+    §f`!!auto_ann start` §a启用自动公告轮播
+    §f`!!auto_ann stop` §a禁用自动公告轮播
+    §f`!!auto_ann reload` §a重载插件配置文件
+    §f`!!auto_ann save` §a保存插件配置文件（默认情况下，在服务器关闭时会自动保存插件配置文件）
+    §f`!!auto_ann list` §a向你展示所有公告
+    §f`!!auto_ann set_interval <interval>` §a更改自动公告的间隔（默认为120）（单位：秒）
+
   create:
     already_in_list: '{0} 已经被创建了!'
     success: '公告 {0} 添加成功'
@@ -26,7 +42,7 @@ auto_ann:
     on_error: '发生错误：{0}'
 
   list:
-    header: '公告列表'
+    header: '公告列表：'
     announcement: '{0} | {1}'
     click_to_show: '点击此处向所有成员展示此公告（默认要求权限等级3）'
     click_to_del: '点击此处删除此公告（默认要求权限等级3）'

@@ -43,11 +43,16 @@ class AnnouncerThread(threading.Thread):
                 except IndexError:
                     continue
             
-            for _ in range(config.interval):
+            tmp_interval = config.interval
+            
+            for _ in range(tmp_interval):
                 sleep(1.0)
+                if tmp_interval != config.interval:
+                    break
+                
                 if self.stop_event.is_set() is True:
-                    self.server_inst.logger.warning(f'auto_ann thread: {threading.current_thread().name} stopped '
-                                                    f'because auto_ann plugin was unloaded.')
+                    self.server_inst.logger.warning(
+                        'auto_ann daemon thread stopped because auto_ann plugin was unloaded.')
                     break
 
 
@@ -165,8 +170,15 @@ def list_announcements(server: PluginServerInterface, src: CommandSource):
             RText('[x]', color=RColor.red)
             .c(RAction.suggest_command, f'!!auto_ann del {name}')
             .h(server.tr('auto_ann.list.click_to_del')),
+            RText(' '),
             RTextMCDRTranslation('auto_ann.list.announcement', name, config.announcement_list.get(name).content)
         ))
+
+
+@new_thread('auto_ann - help')
+def print_help_message(server: PluginServerInterface, src: CommandSource):
+    src.reply(RTextMCDRTranslation('auto_ann.help_msg', server.get_self_metadata().version))
+    list_announcements(server, src)
 
 
 def on_load(server: PluginServerInterface, old_module):
@@ -176,6 +188,7 @@ def on_load(server: PluginServerInterface, old_module):
     
     server.register_command(
         Literal('!!auto_ann')
+        .runs(lambda src: print_help_message(server, src))
         .then(
             Literal('create')
             .then(

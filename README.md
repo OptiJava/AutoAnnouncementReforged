@@ -55,3 +55,7 @@
 `!!auto_ann reload`
 
 - Use this command when you changed the config file.
+
+`!!auto_ann list`
+
+- List all announcements.
