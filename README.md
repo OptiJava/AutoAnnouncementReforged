@@ -10,6 +10,11 @@
 
 - Print help message.
 
+`!!auto_ann create <name>`:
+
+- Create an empty announcement.
+- `<name>` is an identifier of your announcement.
+
 `!!auto_ann create <name> content <content>`:
 
 - Create a new announcement. The announcements will be saved in the config file.
