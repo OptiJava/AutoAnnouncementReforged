@@ -1,19 +1,22 @@
 auto_ann:
-  help_msg: |
-    AutoAnnouncement v{0}
-    §f`!!auto_ann` §aPrint help message.
-    §f`!!auto_ann create <name>` §aCreate an announcement with empty content and name <name>.
-    §f`!!auto_ann create <name> content <content>` §aCreate an announcement with content <content> and name <name>.
-    §f`!!auto_ann del <name>` §aDelete announcement <name>.
-    §f`!!auto_ann enable <name>` §aEnable an announcement.
-    §f`!!auto_ann disable <name>` §aDisable an announcement.
-    §f`!!auto_ann show <name>` §aShow an announcement to all members, whether the announcement is enabled or not.
-    §f`!!auto_ann start` §aStart auto announcer.
-    §f`!!auto_ann stop` §aStop auto announcer.
-    §f`!!auto_ann reload` §aReload config file.
-    §f`!!auto_ann save` §aSave config file.
-    §f`!!auto_ann list` §aShow all announcement to you.
-    §f`!!auto_ann set_interval <interval>` §aChange the interval of automatic announcement (default is 120) (unit: seconds).
+  help_msg:
+    msg: |
+      AutoAnnouncement v{0}
+        §f`!!auto_ann` §aPrint help message.
+        §f`!!auto_ann create <name>` §aCreate an announcement with empty content and name <name>.
+        §f`!!auto_ann create <name> content <content>` §aCreate an announcement with content <content> and name <name>.
+        §f`!!auto_ann del <name>` §aDelete announcement <name>.
+        §f`!!auto_ann enable <name>` §aEnable an announcement.
+        §f`!!auto_ann disable <name>` §aDisable an announcement.
+        §f`!!auto_ann show <name>` §aShow an announcement to all members, whether the announcement is enabled or not.
+        §f`!!auto_ann start` §aStart auto announcer.
+        §f`!!auto_ann stop` §aStop auto announcer.
+        §f`!!auto_ann reload` §aReload config file.
+        §f`!!auto_ann save` §aSave config file.
+        §f`!!auto_ann list` §aShow all announcement to you.
+        §f`!!auto_ann set_interval <interval>` §aChange the interval of automatic announcement (default is 120) (unit: seconds).
+
+    announcer: 'Auto Announcer: {0}'
 
   create:
     already_in_list: '{0} is already in the list!'

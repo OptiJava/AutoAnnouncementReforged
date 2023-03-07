@@ -163,11 +163,15 @@ def list_announcements(server: PluginServerInterface, src: CommandSource):
     
     src.reply(RTextMCDRTranslation('auto_ann.list.header', color=RColor.blue))
     if len(key_list) == 0:
-        src.reply(RTextMCDRTranslation('auto_ann.list.empty'))
+        src.reply(RTextList(
+            RText('  '),
+            RTextMCDRTranslation('auto_ann.list.empty')
+        ))
         return
     
     for name in key_list:
         src.reply(RTextList(
+            RText('  '),
             RText('[▷]', color=RColor.green)
             .c(RAction.suggest_command, f'!!auto_ann show {name}')
             .h(server.tr('auto_ann.list.click_to_show')),
@@ -181,7 +185,11 @@ def list_announcements(server: PluginServerInterface, src: CommandSource):
 
 @new_thread('auto_ann - help')
 def print_help_message(server: PluginServerInterface, src: CommandSource):
-    src.reply(RTextMCDRTranslation('auto_ann.help_msg', server.get_self_metadata().version))
+    global config
+    src.reply(RTextMCDRTranslation('auto_ann.help_msg.msg', server.get_self_metadata().version))
+    src.reply('')
+    src.reply(RTextMCDRTranslation('auto_ann.help_msg.announcer', config.is_auto_announcer_active))
+    src.reply('')
     list_announcements(server, src)
 
 
@@ -374,5 +382,8 @@ def on_server_stop(server: PluginServerInterface, return_code: int):
 
 
 def on_unload(server: PluginServerInterface):
-    global daemon_thread
-    daemon_thread.break_thread()
+    try:
+        global daemon_thread
+        daemon_thread.break_thread()
+    except NameError:
+        pass
