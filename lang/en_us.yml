@@ -43,6 +43,11 @@ auto_ann:
 
   list:
     header: 'Announcements List:'
+    empty: Empty~
     announcement: '{0} | {1}'
     click_to_show: 'Click here to show this announcement to all members (the default requirement is permission level 3)'
     click_to_del: 'Click here to delete this announcement (the default requirement is permission level 3)'
+
+  rename:
+    not_exist: 'The announcement is not in the list!'
+    success: 'Successfully rename announcement {0} to {1}'

@@ -56,5 +56,7 @@ class Configuration(Serializable):
         'reload': 3,
         
         # 显示公告列表
-        'list': 1
+        'list': 1,
+        
+        'rename': 3
     }

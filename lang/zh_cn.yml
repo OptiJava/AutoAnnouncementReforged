@@ -43,6 +43,11 @@ auto_ann:
 
   list:
     header: '公告列表：'
+    empty: '列表是空滴，赶紧去创建你的第一个公告吧~（逃'
     announcement: '{0} | {1}'
     click_to_show: '点击此处向所有成员展示此公告（默认要求权限等级3）'
     click_to_del: '点击此处删除此公告（默认要求权限等级3）'
+
+  rename:
+    not_exist: '公告不存在'
+    success: '成功将公告 {0} 重命名为 {1}'
