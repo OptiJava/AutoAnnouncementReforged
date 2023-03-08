@@ -1,4 +1,4 @@
-# AutoAnnouncement
+# AutoAnnouncementReforged
 
 > Send announcements to members of your server more conveniently and easily in game.
 

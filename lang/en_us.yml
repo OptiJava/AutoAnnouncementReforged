@@ -1,7 +1,7 @@
-auto_ann:
+auto_ann_r:
   help_msg:
     msg: |
-      AutoAnnouncement v{0}
+      AutoAnnouncementReforged v{0}
         §f`!!auto_ann` §aPrint help message.
         §f`!!auto_ann create <name>` §aCreate an announcement with empty content and name <name>.
         §f`!!auto_ann create <name> content <content>` §aCreate an announcement with content <content> and name <name>.

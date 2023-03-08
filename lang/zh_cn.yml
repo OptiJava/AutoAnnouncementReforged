@@ -1,7 +1,7 @@
-auto_ann:
+auto_ann_r:
   help_msg:
     msg: |
-      AutoAnnouncement v{0}
+      AutoAnnouncementReforged v{0}
         §f`!!auto_ann` §a显示帮助信息
         §f`!!auto_ann create <name>` §a创建一个内容为空名为<name>的公告
         §f`!!auto_ann create <name> content <content>` §a创建一个内容为<content>名为<name>的公告

@@ -1,7 +1,7 @@
 {
-  "id": "auto_ann",
+  "id": "auto_ann_r",
   "version": "1.0.0",
-  "name": "AutoAnnouncement",
+  "name": "AutoAnnouncementReforged",
   "description": {
     "en_us": "A simple/easy-to-use auto announcement plugin.",
     "zh_cn": "一个简单易用的自动公告插件"
@@ -13,7 +13,7 @@
   "dependencies": {
     "mcdreforged": ">=2.7.0"
   },
-  "archive_name": "auto_ann-v{version}",
+  "archive_name": "auto_ann_r-v{version}",
   "resources": [
     "lang",
     "LICENSE"
