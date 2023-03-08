@@ -9,7 +9,7 @@
   "author": [
     "OptiJava"
   ],
-  "link": "https://github.com/OptiJava/AutoAnnouncement",
+  "link": "https://github.com/OptiJava/AutoAnnouncementReforged",
   "dependencies": {
     "mcdreforged": ">=2.7.0"
   },
