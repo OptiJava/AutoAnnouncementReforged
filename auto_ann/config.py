@@ -16,6 +16,9 @@ class Configuration(Serializable):
     # 是否启用自动公告
     is_auto_announcer_active: bool = False
     
+    # 自动公告前缀，例如：[公告]
+    prefix: str = ''
+    
     # 公告内容列表（轮播）
     announcement_list: Dict[str, Announcement] = {}
     
@@ -58,5 +61,9 @@ class Configuration(Serializable):
         # 显示公告列表
         'list': 1,
         
-        'rename': 3
+        # 重命名
+        'rename': 3,
+        
+        # 设置公告前缀
+        'set_prefix': 3
     }

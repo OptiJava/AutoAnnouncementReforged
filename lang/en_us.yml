@@ -19,30 +19,31 @@ auto_ann:
     announcer: 'Auto Announcer: {0}'
 
   create:
-    already_in_list: '{0} is already in the list!'
-    success: 'Add announcement {0} successfully.'
+    already_in_list: '§c{0} is already in the list!'
+    success: '§2Add announcement {0} successfully.'
 
   delete:
-    not_exist: '{0} is not in the list!'
-    success: 'Delete announcement {0} successfully.'
+    not_exist: '§c{0} is not in the list!'
+    success: '§2Delete announcement {0} successfully.'
 
   auto_announcer:
-    start: 'Auto announcement started.'
-    stop: 'Auto announcement stopped.'
-    already_started: 'Auto announcement has already started.'
-    already_stopped: 'Auto announcement has already stopped.'
+    start: '§2Auto announcement started.'
+    stop: '§2Auto announcement stopped.'
+    already_started: '§cAuto announcement has already started.'
+    already_stopped: '§cAuto announcement has already stopped.'
 
-    enable: 'Announcement {0} enabled successfully.'
-    disable: 'Announcement {0} disabled successfully.'
-    enable_or_disable_failed: 'Announcement {0} is not in the list!'
+    enable: '§2Announcement {0} enabled successfully.'
+    disable: '§2Announcement {0} disabled successfully.'
+    enable_or_disable_failed: '§cAnnouncement {0} is not in the list!'
 
   config:
-    save: 'Config saved!'
-    reload: 'Config reloaded!'
-    set_interval: 'Set auto announcement interval to {0}'
+    save: '§2Config saved!'
+    reload: '§2Config reloaded!'
+    set_interval: '§2Set auto announcement interval to {0}'
+    set_prefix: '§2Set prefix to {0}'
 
   command:
-    on_error: 'An error occurred: {0}'
+    on_error: '§cAn error occurred: {0}'
 
   list:
     header: 'Announcements List:'
@@ -50,7 +51,9 @@ auto_ann:
     announcement: '{0} | {1}'
     click_to_show: 'Click here to show this announcement to all members (the default requirement is permission level 3)'
     click_to_del: 'Click here to delete this announcement (the default requirement is permission level 3)'
+    click_to_enable: 'Click here to enable this announcement'
+    click_to_disable: 'Click here to disable this announcement'
 
   rename:
-    not_exist: 'The announcement is not in the list!'
-    success: 'Successfully rename announcement {0} to {1}'
+    not_exist: '§cThe announcement is not in the list!'
+    success: '§2Successfully rename announcement {0} to {1}'
