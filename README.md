@@ -12,12 +12,13 @@
 
 `!!auto_ann create <name>`:
 
-- Create an empty announcement.
-- `<name>` is an identifier of your announcement.
+- Create an default announcement.
+- Default (template) announcement can be change in config file
+- `<name>` is an identifier of your announcement(must without blank).
 
 `!!auto_ann create <name> content <content>`:
 
-- Create a new announcement. The announcements will be saved in the config file.
+- Create a new announcement(use template announcement configuration). The announcements will be saved in the config file.
 - `<name>` is an identifier of your announcement.
 - `<content>` is the content of the announcement.
 
@@ -64,3 +65,48 @@
 `!!auto_ann list`
 
 - List all announcements.
+
+`!!auto_ann modify <name> <content>`
+- Modify announcement content
+
+### Configuration
+
+```
+ {
+    # default announcement config (announcement template)
+    "default_announcement_configuration": {
+        "content": "",
+        "enabled": true
+    },
+    
+    # is auto announcer active
+    "is_auto_announcer_active": false,
+    
+    # announcement prefix, example: '[Announcement]'
+    "prefix": "",
+    
+    # announcement dict, usually you needn't edit this
+    "announcement_list": {},
+    
+    # auto announcer interval, unit seconds
+    "interval": 120,
+    
+    # command permission
+    "permission": {
+        "create": 3,
+        "del": 3,
+        "show": 3,
+        "stop": 3,
+        "start": 3,
+        "enable": 3,
+        "disable": 3,
+        "set_interval": 3,
+        "save": 3,
+        "reload": 3,
+        "list": 1,
+        "rename": 3,
+        "set_prefix": 3,
+        "modify": 3
+    }
+}
+```

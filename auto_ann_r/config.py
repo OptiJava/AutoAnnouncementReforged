@@ -13,7 +13,7 @@ class Announcement(Serializable):
 
 
 class Configuration(Serializable):
-    # 默认的新创建的公告
+    # 默认的新创建的公告（公告模板）
     default_announcement_configuration: Announcement = Announcement()
     
     # 是否启用自动公告
