@@ -61,3 +61,7 @@ auto_ann_r:
   modify:
     success: '§2成功修改内容'
     not_exist: '§c公告不存在！'
+
+  show:
+    success: '§2成功展示公告'
+    not_exist: '§c公告不存在'

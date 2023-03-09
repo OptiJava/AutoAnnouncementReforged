@@ -61,3 +61,7 @@ auto_ann_r:
   modify:
     success: '§2Successfully modify announcement content.'
     not_exist: '§cAnnouncement not exist!'
+
+  show:
+    success: '§2Successfully showed the announcement'
+    not_exist: '§cAnnouncement not exist!'

@@ -94,7 +94,6 @@ def del_announcement(server: PluginServerInterface, name: str, src: CommandSourc
         src.reply(RTextMCDRTranslation('auto_ann_r.delete.not_exist', name))
 
 
-@new_thread('auto_ann_r - show')
 def show_announcement(server: PluginServerInterface, name: str):
     global config
     if name in config.announcement_list:
@@ -109,7 +108,17 @@ def show_announcement(server: PluginServerInterface, name: str):
             RText(config.announcement_list.get(name).content)
         ))
         server.logger.info(f'Successfully showed announcement {name}.')
+        
 
+@new_thread('auto_ann_r - show')
+def man_show_announcement(server: PluginServerInterface, name: str, src: CommandSource):
+    global config
+    if name not in config.announcement_list:
+        src.reply(RTextMCDRTranslation('auto_ann.show.not_exist'))
+        return
+    show_announcement(server, name)
+    src.reply(RTextMCDRTranslation('auto_ann.show.success'))
+    
 
 def set_interval(server: PluginServerInterface, interval: int, src: CommandSource):
     global config
@@ -324,7 +333,7 @@ def on_load(server: PluginServerInterface, old_module):
                           lambda src, err: src.reply(
                               RTextMCDRTranslation(oe, err)),
                           handled=True)
-                .runs(lambda src, ctx: show_announcement(server, ctx['name']))
+                .runs(lambda src, ctx: man_show_announcement(server, ctx['name'], src))
             )
         )
         
