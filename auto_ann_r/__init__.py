@@ -62,6 +62,10 @@ daemon_thread: AnnouncerThread
 @new_thread('auto_ann_r - create')
 def create_announcement(server: PluginServerInterface, name: str, src: CommandSource, value: str = ''):
     global config
+    
+    # reference code https://github.com/Da-Dog/MCDR-Plugins/tree/master/MCDR_ANN
+    value = value.replace('&', '§')
+    
     if name not in config.announcement_list:
         config.announcement_list[name] = Announcement(content=value)
         src.reply(RTextMCDRTranslation('auto_ann_r.create.success', name))
