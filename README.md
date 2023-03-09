@@ -1,5 +1,7 @@
 # AutoAnnouncementReforged
 
+English | [中文](https://github.com/OptiJava/AutoAnnouncementReforged/blob/master/README-zh.md)
+
 > Send announcements to members of your server more conveniently and easily in game.
 
 ## Usage

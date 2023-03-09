@@ -1,5 +1,7 @@
 # AutoAnnouncementReforged
 
+中文 | [English](https://github.com/OptiJava/AutoAnnouncementReforged/blob/master/README.md)
+
 > 更加简单、方便地在服务器中发布公告~
 
 ## 用法
