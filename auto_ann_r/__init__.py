@@ -53,7 +53,7 @@ class AnnouncerThread(threading.Thread):
                 if self.stop_event.is_set() is True:
                     self.server_inst.logger.info(
                         'auto_ann_r daemon thread stopped because auto_ann_r plugin was unloaded.')
-                    break
+                    return
 
 
 daemon_thread: AnnouncerThread
@@ -63,15 +63,14 @@ daemon_thread: AnnouncerThread
 def create_announcement(server: PluginServerInterface, name: str, src: CommandSource, value: str = ''):
     global config
     
-    # reference code https://github.com/Da-Dog/MCDR-Plugins/tree/master/MCDR_ANN
-    value = value.replace('&', '§')
+    value = value.replace('$', '§')
     
     if name not in config.announcement_list:
         if type(config.default_announcement_configuration) != type(Announcement()):
             config.default_announcement_configuration = Announcement()
             server.logger.error('default_announcement_configuration is not correct! Use default announcement template '
                                 'instead.')
-            
+        
         config.announcement_list[name] = config.default_announcement_configuration
         
         if value != '':
@@ -255,6 +254,20 @@ def set_prefix(server: PluginServerInterface, prefix: str, src: CommandSource):
     server.logger.info(f'Set prefix to {prefix}')
 
 
+@new_thread('auto_ann_r - modify')
+def modify_content(server: PluginServerInterface, name: str, content: str, src: CommandSource):
+    global config
+    if name not in config.announcement_list:
+        src.reply(RTextMCDRTranslation('auto_ann_r.modify.not_exist'))
+        return
+
+    content = content.replace('$', '§')
+    
+    config.announcement_list[name].content = content
+    src.reply(RTextMCDRTranslation("auto_ann_r.modify.success"))
+    server.logger.info(f'Modify announcement {name} successfully')
+
+
 def on_load(server: PluginServerInterface, old_module):
     global config
     
@@ -423,6 +436,19 @@ def on_load(server: PluginServerInterface, old_module):
                     RTextMCDRTranslation(oe, err)),
                           handled=True)
                 .runs(lambda src, ctx: set_prefix(server, ctx['prefix'], src))
+            )
+        )
+        .then(
+            Literal('modify')
+            .then(
+                Text('name').then(
+                    GreedyText('content')
+                    .requires(lambda src: src.has_permission(config.permission['modify']))
+                    .on_error(CommandError, lambda src, err: src.reply(
+                        RTextMCDRTranslation(oe, err)),
+                              handled=True)
+                    .runs(lambda src, ctx: modify_content(server, ctx['name'], ctx['content'], src))
+                )
             )
         )
     )

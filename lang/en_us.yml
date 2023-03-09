@@ -57,3 +57,7 @@ auto_ann_r:
   rename:
     not_exist: '§cThe announcement is not in the list!'
     success: '§2Successfully rename announcement {0} to {1}'
+
+  modify:
+    success: '§2Successfully modify announcement content.'
+    not_exist: '§cAnnouncement not exist!'

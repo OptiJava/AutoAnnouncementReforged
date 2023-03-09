@@ -57,3 +57,7 @@ auto_ann_r:
   rename:
     not_exist: '§c公告不存在'
     success: '§2成功将公告 {0} 重命名为 {1}'
+
+  modify:
+    success: '§2成功修改内容'
+    not_exist: '§c公告不存在！'

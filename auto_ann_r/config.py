@@ -68,5 +68,8 @@ class Configuration(Serializable):
         'rename': 3,
         
         # 设置公告前缀
-        'set_prefix': 3
+        'set_prefix': 3,
+        
+        # 修改内容
+        'modify': 3
     }
