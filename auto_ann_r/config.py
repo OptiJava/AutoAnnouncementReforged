@@ -13,6 +13,9 @@ class Announcement(Serializable):
 
 
 class Configuration(Serializable):
+    # 默认的新创建的公告
+    default_announcement_configuration: Announcement = Announcement()
+    
     # 是否启用自动公告
     is_auto_announcer_active: bool = False
     

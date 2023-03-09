@@ -67,7 +67,16 @@ def create_announcement(server: PluginServerInterface, name: str, src: CommandSo
     value = value.replace('&', '§')
     
     if name not in config.announcement_list:
-        config.announcement_list[name] = Announcement(content=value)
+        if type(config.default_announcement_configuration) != type(Announcement()):
+            config.default_announcement_configuration = Announcement()
+            server.logger.error('default_announcement_configuration is not correct! Use default announcement template '
+                                'instead.')
+            
+        config.announcement_list[name] = config.default_announcement_configuration
+        
+        if value != '':
+            config.announcement_list[name].content = value
+        
         src.reply(RTextMCDRTranslation('auto_ann_r.create.success', name))
         server.logger.info(f'Add announcement {name} successfully.')
     else:
