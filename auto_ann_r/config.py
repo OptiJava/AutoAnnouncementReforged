@@ -10,17 +10,20 @@ class Announcement(Serializable):
     # 是否启用
     # 若禁用，则公告不会被自动轮播，但仍可以通过`!!auto_ann show xxx`指令展示此公告
     enabled: bool = True
+    
+    def __copy__(self):
+        return Announcement(content=self.content, enabled=self.enabled)
 
 
 class Configuration(Serializable):
     # 默认的新创建的公告（公告模板）
-    default_announcement_configuration: Announcement = Announcement()
+    default_announcement_configuration: Announcement = Announcement(content='', enabled=True)
     
     # 是否启用自动公告
     is_auto_announcer_active: bool = False
     
-    # 自动公告前缀，例如：[公告]
-    prefix: str = ''
+    # 自动公告前缀，例如：[公告]（%name会被替换成公告名字）
+    prefix: str = '[%name]'
     
     # 公告内容列表（轮播）
     announcement_list: Dict[str, Announcement] = {}

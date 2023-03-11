@@ -71,8 +71,15 @@ English | [中文](https://github.com/OptiJava/AutoAnnouncementReforged/blob/mas
 `!!auto_ann modify <name> <content>`
 - Modify announcement content
 
+`!!auto_ann set_prefix <prefix>`
+- Change announcement prefix（%name will be replaced to announcement name）
+
+`!!auto_ann rename <p_name> <u_name>`
+- Change announcement name.
+
 ### Configuration
 
+**This is the default config file.**
 ```
  {
     # default announcement config (announcement template)
@@ -84,8 +91,8 @@ English | [中文](https://github.com/OptiJava/AutoAnnouncementReforged/blob/mas
     # is auto announcer active
     "is_auto_announcer_active": false,
     
-    # announcement prefix, example: '[Announcement]'
-    "prefix": "",
+    # announcement prefix, example: '[Announcement]' (%name will be replaced to announcement name)
+    "prefix": "[%name]",
     
     # announcement dict, usually you needn't edit this
     "announcement_list": {},

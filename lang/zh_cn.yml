@@ -2,6 +2,7 @@ auto_ann_r:
   help_msg:
     msg: |
       AutoAnnouncementReforged v{0}
+      §5指令说明
         §f`!!auto_ann` §a显示帮助信息
         §f`!!auto_ann create <name>` §a创建一个内容为空名为<name>的公告
         §f`!!auto_ann create <name> content <content>` §a创建一个内容为<content>名为<name>的公告
@@ -12,11 +13,15 @@ auto_ann_r:
         §f`!!auto_ann start` §a启用自动公告轮播
         §f`!!auto_ann stop` §a禁用自动公告轮播
         §f`!!auto_ann reload` §a重载插件配置文件
-        §f`!!auto_ann save` §a保存插件配置文件（默认情况下，在服务器关闭时会自动保存插件配置文件）
+        §f`!!auto_ann save` §a保存插件配置文件（默认情况下，在插件卸载时会自动保存配置文件）
         §f`!!auto_ann list` §a向你展示所有公告
         §f`!!auto_ann set_interval <interval>` §a更改自动公告的间隔（默认为120）（单位：秒）
-
-    announcer: '自动公告：{0}'
+        §f`!!auto_ann set_prefix <prefix>` §a更改公告前缀（%name会被替换为公告名）
+        §f`!!auto_ann rename <p_name> <u_name>` §a更改公告名字
+      §5配置
+        自动公告：§9{1}
+        公告前缀: §9{2}
+        自动公告间隔: §9{3}
 
   create:
     already_in_list: '§c{0} 已经被创建了!'
@@ -43,11 +48,13 @@ auto_ann_r:
     set_prefix: '§2成功设置公告前缀为：{0}'
 
   command:
-    on_error: '§c发生错误：{0}'
+    on_error: |
+      §c执行指令时发生错误 
+      {0}
 
   list:
-    header: '公告列表：'
-    empty: '列表是空滴，赶紧去创建你的第一个公告吧~（逃'
+    header: '§5公告列表'
+    empty: '  §2列表是空滴，赶紧去创建你的第一个公告吧~（逃'
     announcement: '{0} | {1}'
     click_to_show: '点击此处向所有成员展示此公告（默认要求权限等级3）'
     click_to_del: '点击此处删除此公告（默认要求权限等级3）'

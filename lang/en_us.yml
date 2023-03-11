@@ -2,6 +2,7 @@ auto_ann_r:
   help_msg:
     msg: |
       AutoAnnouncementReforged v{0}
+      §5Commands
         §f`!!auto_ann` §aPrint help message.
         §f`!!auto_ann create <name>` §aCreate an announcement with empty content and name <name>.
         §f`!!auto_ann create <name> content <content>` §aCreate an announcement with content <content> and name <name>.
@@ -15,8 +16,12 @@ auto_ann_r:
         §f`!!auto_ann save` §aSave config file.
         §f`!!auto_ann list` §aShow all announcement to you.
         §f`!!auto_ann set_interval <interval>` §aChange the interval of automatic announcement (default is 120) (unit: seconds).
-
-    announcer: 'Auto Announcer: {0}'
+        §f`!!auto_ann set_prefix <prefix>` §aChange announcement prefix（%name will be replaced to announcement name）
+        §f`!!auto_ann rename <p_name> <u_name>` §aChange announcement name
+      §5Configurations
+        Auto Announcer: §9{1}
+        Announcement prefix: §9{2}
+        Interval: §9{3}
 
   create:
     already_in_list: '§c{0} is already in the list!'
@@ -43,11 +48,13 @@ auto_ann_r:
     set_prefix: '§2Set prefix to {0}'
 
   command:
-    on_error: '§cAn error occurred: {0}'
+    on_error: |
+      §cAn error occurred 
+      {0}
 
   list:
-    header: 'Announcements List:'
-    empty: Empty~
+    header: '§5Announcements List:'
+    empty: '  §2Empty~'
     announcement: '{0} | {1}'
     click_to_show: 'Click here to show this announcement to all members (the default requirement is permission level 3)'
     click_to_del: 'Click here to delete this announcement (the default requirement is permission level 3)'

@@ -70,8 +70,15 @@
 `!!auto_ann modify <name> <content>`
 - 编辑公告内容
 
+`!!auto_ann set_prefix <prefix>`
+- 更改公告前缀（%name会被替换为公告名字）
+
+`!!auto_ann rename <p_name> <u_name>`
+- 更改公告名字
+
 ### 配置
 
+**这是默认的配置文件**
 ```
  {
     # 默认的新创建的公告（公告模板）
@@ -83,8 +90,8 @@
     # 是否启用自动公告
     "is_auto_announcer_active": false,
     
-    # 自动公告前缀，例如：[公告]
-    "prefix": "",
+    # 自动公告前缀，例如：[公告]（%name会被替换成公告名字）
+    "prefix": "[%name]",
     
     # 公告内容列表（轮播）
     "announcement_list": {},
